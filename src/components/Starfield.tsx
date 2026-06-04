@@ -108,9 +108,9 @@ export function Starfield({ count = 120, className = "" }: { count?: number; cla
     };
 
     const handleResize = () => {
-      // Use window viewport dimensions since the canvas is fixed full-screen
-      width = window.innerWidth;
-      height = window.innerHeight;
+      // Use client dimensions to exclude scrollbar widths and prevent overflow
+      width = document.documentElement.clientWidth;
+      height = document.documentElement.clientHeight;
 
       const dpr = window.devicePixelRatio || 1;
       canvas.width = width * dpr;
@@ -352,7 +352,7 @@ export function Starfield({ count = 120, className = "" }: { count?: number; cla
     <canvas
       ref={canvasRef}
       className={`pointer-events-none fixed z-0 ${className}`}
-      style={{ left: 0, top: 0, width: "100vw", height: "100vh" }}
+      style={{ left: 0, top: 0, width: "100%", height: "100%" }}
     />
   );
 }
