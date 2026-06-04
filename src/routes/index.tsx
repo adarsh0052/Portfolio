@@ -372,10 +372,12 @@ function OrbitingSatellite({ trailIdx, isInView }: { trailIdx: number; isInView:
   useEffect(() => {
     if (!isInView) return;
 
+    const isMobileSize = window.innerWidth < 768;
+    const rx = isMobileSize ? 135 : 185;
+    const ry = isMobileSize ? 45 : 60;
+
     const orbitCos = Math.cos((-20 * Math.PI) / 180);
     const orbitSin = Math.sin((-20 * Math.PI) / 180);
-    const rx = 185;
-    const ry = 60;
     
     let animationFrameId: number;
     const startTime = Date.now();
@@ -626,14 +628,14 @@ function Index() {
 
                 {/* Dashed Ellipse Orbit Track */}
                 <svg
-                  className="absolute inset-[-60px] pointer-events-none w-[calc(100%+120px)] h-[calc(100%+120px)]"
+                  className="absolute inset-[-40px] md:inset-[-60px] pointer-events-none w-[calc(100%+80px)] md:w-[calc(100%+120px)] h-[calc(100%+80px)] md:h-[calc(100%+120px)]"
                   style={{ transform: "rotate(-20deg)", zIndex: 5 }}
                 >
                   <ellipse
                     cx="50%"
                     cy="50%"
-                    rx="185"
-                    ry="60"
+                    rx={isMobile ? "135" : "185"}
+                    ry={isMobile ? "45" : "60"}
                     fill="none"
                     stroke="rgba(255, 255, 255, 0.15)"
                     strokeWidth="1.2"

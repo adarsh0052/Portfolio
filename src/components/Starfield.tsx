@@ -224,10 +224,12 @@ export function Starfield({ count = 120, className = "" }: { count?: number; cla
         ctx.arc(centerX, centerY, R_bh * 6, 0, Math.PI * 2);
         ctx.fill();
 
-        // Update accretion disk particle vectors
-        bhParticles.forEach((p) => {
-          p.angle += p.speed;
-        });
+        // Update accretion disk particle vectors (only on desktop to make mobile fully static)
+        if (!isMobile) {
+          bhParticles.forEach((p) => {
+            p.angle += p.speed;
+          });
+        }
 
         // 2. Draw BACK HALF of lensed accretion disk (where particles orbit behind singularity: sin(angle) <= 0)
         bhParticles.forEach((p) => {
@@ -348,12 +350,14 @@ export function Starfield({ count = 120, className = "" }: { count?: number; cla
       const scrollDelta = Math.abs(scrollYRef.current - smoothScrollY);
       const bhOpacity = Math.max(0, 1 - smoothScrollY / (height * 0.85));
 
-      // Pause drawing loop entirely when:
-      // 1. Black hole is completely faded out (bhOpacity === 0)
-      // 2. The scroll has settled (scrollDelta < 0.15)
-      // This saves 100% of background CPU/GPU draw time during reading/scrolling lower parts of the page.
-      if (bhOpacity === 0 && scrollDelta < 0.15) {
-        drawFrame(0); // Draw final aligned frame
+      // If mobile: turn static (no animations/loop updates at all) as soon as scroll settles (scrollDelta < 0.15).
+      // If desktop: pause once the black hole fades out and scroll settles.
+      const shouldPause = isMobile 
+        ? (scrollDelta < 0.15) 
+        : (bhOpacity === 0 && scrollDelta < 0.15);
+
+      if (shouldPause) {
+        drawFrame(bhOpacity); // Draw final aligned static frame
         isRunning = false;
         return;
       }
