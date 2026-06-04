@@ -1,0 +1,414 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-display: "Outfit", "Plus Jakarta Sans", sans-serif;
+  --font-sans: "Geist", "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-serif: "Fraunces", Georgia, serif;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-cosmos: var(--cosmos);
+  --color-nebula: var(--nebula);
+  --color-aurora: var(--aurora);
+  --color-solar: var(--solar);
+  --color-ember: var(--ember);
+  --color-tide: var(--tide);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  --radius: 1rem;
+  /* Deep Space Cosmos: obsidian sky with starlight accents */
+  --background: #030306; /* obsidian void */
+  --foreground: oklch(0.95 0.01 250); /* starlight white */
+  --card: oklch(0.12 0.025 250); /* dark space metal */
+  --card-foreground: oklch(0.95 0.01 250);
+  --popover: oklch(0.1 0.02 250);
+  --popover-foreground: oklch(0.95 0.01 250);
+  --primary: oklch(0.82 0.14 195); /* auroral cyan */
+  --primary-foreground: oklch(0.08 0.02 250);
+  --secondary: oklch(0.15 0.02 250);
+  --secondary-foreground: oklch(0.95 0.01 250);
+  --muted: oklch(0.15 0.02 250);
+  --muted-foreground: oklch(0.6 0.02 250);
+  --accent: oklch(0.2 0.03 250);
+  --accent-foreground: oklch(0.95 0.01 250);
+  --destructive: oklch(0.55 0.22 25);
+  --destructive-foreground: oklch(0.99 0.005 0);
+  --border: oklch(0.2 0.03 250);
+  --input: oklch(0.2 0.03 250);
+  --ring: oklch(0.82 0.14 195);
+
+  /* Cosmic Accent Colors */
+  --cosmos: oklch(0.2 0.08 260); /* muted indigo */
+  --nebula: oklch(0.72 0.18 320); /* vibrant magenta-purple */
+  --aurora: oklch(0.78 0.14 195); /* polar cyan-teal */
+  --solar: oklch(0.82 0.16 75); /* warm solar gold */
+  --ember: oklch(0.7 0.18 45); /* pilot amber */
+  --tide: oklch(0.7 0.15 220); /* SpenWyse cyan */
+
+  --gradient-sky: linear-gradient(180deg, oklch(0.06 0.015 250) 0%, oklch(0.1 0.02 260) 100%);
+  --gradient-aurora: linear-gradient(120deg, var(--aurora), var(--nebula), var(--solar));
+  --gradient-ember: radial-gradient(
+    circle at 30% 30%,
+    var(--solar),
+    var(--ember) 60%,
+    var(--cosmos)
+  );
+  --gradient-tide: radial-gradient(circle at 50% 50%, var(--aurora), var(--tide) 70%);
+  --gradient-core: radial-gradient(
+    circle,
+    oklch(0.98 0.01 250) 0%,
+    var(--aurora) 30%,
+    var(--cosmos) 80%,
+    oklch(0.05 0.01 250) 100%
+  );
+
+  --shadow-soft: 0 30px 80px -30px rgba(0, 0, 0, 0.6);
+  --shadow-glow: 0 0 40px color-mix(in oklab, var(--aurora) 30%, transparent);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  html,
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    cursor: none;
+  }
+  body {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+  }
+  a,
+  button,
+  input,
+  textarea,
+  select,
+  [role="button"] {
+    cursor: none;
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: var(--font-display);
+  }
+  .font-mono {
+    font-family: var(--font-mono);
+  }
+  .text-gradient-aurora {
+    background: var(--gradient-aurora);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .text-starry {
+    background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 45%, #fef3c7 75%, #ffffff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 
+      0 0 10px rgba(255, 255, 255, 0.4), 
+      0 0 20px rgba(251, 191, 36, 0.2);
+    filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.8));
+  }
+  .text-white-starry {
+    color: #ffffff;
+    text-shadow: 
+      0 0 4px rgba(255, 255, 255, 0.5), 
+      0 0 10px rgba(255, 255, 255, 0.25);
+    filter: drop-shadow(0 0 0.5px rgba(255, 255, 255, 0.7));
+  }
+  .transmission-textarea {
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .transmission-textarea:focus {
+    outline: none !important;
+    border-color: #ffffff !important;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.4) !important;
+  }
+  .github-chart {
+    filter: invert(1) !important;
+  }
+  .btn-starry {
+    background: linear-gradient(135deg, rgba(3, 7, 18, 0.7) 0%, rgba(15, 23, 42, 0.5) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+    box-shadow: 
+      0 0 20px rgba(255, 255, 255, 0.03),
+      inset 0 1px 1px rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(16px);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-starry::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: 
+      radial-gradient(1px 1px at 20px 30px, #fff, rgba(0,0,0,0)),
+      radial-gradient(1.5px 1.5px at 75px 10px, #fff, rgba(0,0,0,0)),
+      radial-gradient(1px 1px at 120px 40px, #fcd34d, rgba(0,0,0,0)),
+      radial-gradient(2px 2px at 180px 20px, #fff, rgba(0,0,0,0));
+    opacity: 0.35;
+    transition: opacity 0.4s ease;
+  }
+  .btn-starry:hover {
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 
+      0 0 25px rgba(255, 255, 255, 0.15),
+      0 0 10px rgba(251, 191, 36, 0.08),
+      inset 0 1px 2px rgba(255, 255, 255, 0.25);
+    transform: scale(1.03) translateY(-1px);
+  }
+  .btn-starry:hover::before {
+    opacity: 0.75;
+  }
+  .bg-gradient-sky {
+    background: var(--gradient-sky);
+  }
+  .bg-gradient-core {
+    background: var(--gradient-core);
+  }
+  .bg-gradient-aurora {
+    background: var(--gradient-aurora);
+  }
+  .shadow-soft {
+    box-shadow: var(--shadow-soft);
+  }
+  .shadow-glow {
+    box-shadow: var(--shadow-glow);
+  }
+
+  .grain::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(
+      circle at 1px 1px,
+      oklch(0.2 0.05 270 / 0.06) 1px,
+      transparent 0
+    );
+    background-size: 3px 3px;
+    pointer-events: none;
+    mix-blend-mode: multiply;
+  }
+}
+
+@keyframes float-slow {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-20px) rotate(2deg);
+  }
+}
+@keyframes orbit {
+  from {
+    transform: rotate(0deg) translateX(var(--orbit-r, 120px)) rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg) translateX(var(--orbit-r, 120px)) rotate(-360deg);
+  }
+}
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow:
+      0 0 40px color-mix(in oklab, var(--solar) 40%, transparent),
+      0 0 80px color-mix(in oklab, var(--nebula) 25%, transparent);
+  }
+  50% {
+    box-shadow:
+      0 0 70px color-mix(in oklab, var(--solar) 70%, transparent),
+      0 0 140px color-mix(in oklab, var(--nebula) 45%, transparent);
+  }
+}
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.2;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.4);
+  }
+}
+@keyframes drift {
+  0% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(30px, -30px);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+@keyframes thruster-pulse {
+  0%,
+  100% {
+    transform: scaleY(0.9) opacity(0.85);
+    filter: drop-shadow(0 0 4px var(--ember));
+  }
+  50% {
+    transform: scaleY(1.15) opacity(1);
+    filter: drop-shadow(0 0 12px var(--solar));
+  }
+}
+@keyframes solar-rotate {
+  0% {
+    transform: rotateX(0deg) rotateY(0deg);
+  }
+  50% {
+    transform: rotateX(15deg) rotateY(10deg);
+  }
+  100% {
+    transform: rotateX(0deg) rotateY(0deg);
+  }
+}
+@keyframes scanline-pass {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+@keyframes ping-slow {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.2;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(0.95);
+    opacity: 0.2;
+  }
+}
+
+.animate-float-slow {
+  animation: float-slow 8s ease-in-out infinite;
+}
+.animate-pulse-glow {
+  animation: pulse-glow 4s ease-in-out infinite;
+}
+.animate-twinkle {
+  animation: twinkle 3s ease-in-out infinite;
+}
+.animate-drift {
+  animation: drift 12s ease-in-out infinite;
+}
+.animate-orbit {
+  animation: orbit var(--orbit-d, 20s) linear infinite;
+}
+.animate-thruster {
+  animation: thruster-pulse 0.2s ease-in-out infinite;
+}
+.animate-solar-pitch {
+  animation: solar-rotate 10s ease-in-out infinite;
+}
+.animate-ping-slow {
+  animation: ping-slow 6s ease-in-out infinite;
+}
+
+/* Sci-fi HUD Telemetry styles */
+.bg-grid-cyber {
+  background-size: 24px 24px;
+  background-image:
+    linear-gradient(
+      to right,
+      color-mix(in oklab, var(--cosmos) 6%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      color-mix(in oklab, var(--cosmos) 6%, transparent) 1px,
+      transparent 1px
+    );
+}
+
+.scifi-panel {
+  border: 1px solid color-mix(in oklab, var(--cosmos) 18%, transparent);
+  background: color-mix(in oklab, var(--card) 75%, transparent);
+  backdrop-filter: blur(16px);
+  position: relative;
+  overflow: hidden;
+}
+
+.scifi-panel::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--aurora), transparent);
+  animation: scanline-pass 8s linear infinite;
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.glow-text-cyan {
+  text-shadow: 0 0 10px color-mix(in oklab, var(--aurora) 60%, transparent);
+}
+
+.glow-text-amber {
+  text-shadow: 0 0 10px color-mix(in oklab, var(--solar) 60%, transparent);
+}
+
+.glow-text-red {
+  text-shadow: 0 0 10px color-mix(in oklab, var(--ember) 60%, transparent);
+}
