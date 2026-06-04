@@ -183,6 +183,13 @@ export function Starfield({ count = 120, className = "" }: { count?: number; cla
 
       // RENDER LIVE BLACK HOLE (Fades out dynamically as we scroll down)
       const bhOpacity = Math.max(0, 1 - smoothScrollY / (height * 0.85));
+
+      // On mobile, if the black hole is fully faded out, stop redrawing to achieve 60fps on scroll
+      if (isMobile && bhOpacity === 0) {
+        animationFrameId = requestAnimationFrame(animate);
+        return;
+      }
+
       if (bhOpacity > 0) {
         const dpr = window.devicePixelRatio || 1;
         const w = canvas.width / dpr;

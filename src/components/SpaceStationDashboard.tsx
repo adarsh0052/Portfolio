@@ -467,57 +467,58 @@ export function SpaceStationDashboard() {
           </svg>
         </div>
 
-        {/* ABSOLUTE INTERACTIVE LABELS (PROJECT BADGES) */}
-
-        {/* Project 01: SpenWyse (Bottom) */}
-        <div
-          onClick={() => setActiveIdx(0)}
-          onMouseEnter={() => setHoveredIdx(0)}
-          onMouseLeave={() => setHoveredIdx(null)}
-          className={`absolute bottom-3 left-1/2 -translate-x-1/2 cursor-pointer z-20 rounded-xl px-4 py-2 border text-center transition-all duration-300 backdrop-blur-md w-[170px] select-none ${
-            activeIdx === 0
-              ? "bg-white/10 border-white text-white shadow-[0_0_15px_rgba(255,255,255,0.25)]"
-              : "bg-background/80 border-border hover:border-slate-400 text-muted-foreground hover:text-foreground"
-          }`}
-        >
-          <div className="font-mono text-[8px] uppercase tracking-widest opacity-60">
-            PRIMARY PROJECT
+        {/* ABSOLUTE INTERACTIVE LABELS (PROJECT BADGES) - Stacked on mobile to prevent layout overflow */}
+        <div className="flex flex-wrap justify-center gap-3 mt-6 w-full md:contents">
+          {/* Project 01: SpenWyse (Bottom) */}
+          <div
+            onClick={() => setActiveIdx(0)}
+            onMouseEnter={() => setHoveredIdx(0)}
+            onMouseLeave={() => setHoveredIdx(null)}
+            className={`relative md:absolute md:bottom-3 md:left-1/2 md:-translate-x-1/2 cursor-pointer z-20 rounded-xl px-4 py-2 border text-center transition-all duration-300 backdrop-blur-md w-full max-w-[240px] md:w-[170px] select-none ${
+              activeIdx === 0
+                ? "bg-white/10 border-white text-white shadow-[0_0_15px_rgba(255,255,255,0.25)]"
+                : "bg-background/80 border-border hover:border-slate-400 text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <div className="font-mono text-[8px] uppercase tracking-widest opacity-60">
+              PRIMARY PROJECT
+            </div>
+            <div className="text-xs font-bold font-mono mt-0.5">01 / SpenWyse</div>
           </div>
-          <div className="text-xs font-bold font-mono mt-0.5">01 / SpenWyse</div>
-        </div>
 
-        {/* Project 02: ResuRank (Top Right) */}
-        <div
-          onClick={() => setActiveIdx(1)}
-          onMouseEnter={() => setHoveredIdx(1)}
-          onMouseLeave={() => setHoveredIdx(null)}
-          className={`absolute top-10 right-2 md:right-6 cursor-pointer z-20 rounded-xl px-4 py-2 border transition-all duration-300 backdrop-blur-md w-[170px] text-left select-none ${
-            activeIdx === 1
-              ? "bg-white/10 border-white text-white shadow-[0_0_15px_rgba(255,255,255,0.25)]"
-              : "bg-background/80 border-border hover:border-slate-400 text-muted-foreground hover:text-foreground"
-          }`}
-        >
-          <div className="font-mono text-[8px] uppercase tracking-widest opacity-60">
-            PRIMARY PROJECT
+          {/* Project 02: ResuRank (Top Right) */}
+          <div
+            onClick={() => setActiveIdx(1)}
+            onMouseEnter={() => setHoveredIdx(1)}
+            onMouseLeave={() => setHoveredIdx(null)}
+            className={`relative md:absolute md:top-10 md:right-6 cursor-pointer z-20 rounded-xl px-4 py-2 border transition-all duration-300 backdrop-blur-md w-full max-w-[240px] md:w-[170px] text-center md:text-left select-none ${
+              activeIdx === 1
+                ? "bg-white/10 border-white text-white shadow-[0_0_15px_rgba(255,255,255,0.25)]"
+                : "bg-background/80 border-border hover:border-slate-400 text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <div className="font-mono text-[8px] uppercase tracking-widest opacity-60">
+              PRIMARY PROJECT
+            </div>
+            <div className="text-xs font-bold font-mono mt-0.5">02 / ResuRank</div>
           </div>
-          <div className="text-xs font-bold font-mono mt-0.5">02 / ResuRank</div>
-        </div>
 
-        {/* Project 03: TradePilot (Top Left - Muted Highlight) */}
-        <div
-          onClick={() => setActiveIdx(2)}
-          onMouseEnter={() => setHoveredIdx(2)}
-          onMouseLeave={() => setHoveredIdx(null)}
-          className={`absolute top-10 left-2 md:left-6 cursor-pointer z-20 rounded-xl px-4 py-2 border transition-all duration-300 backdrop-blur-md w-[170px] text-left select-none ${
-            activeIdx === 2
-              ? "bg-white/10 border-white text-white shadow-[0_0_15px_rgba(255,255,255,0.25)]"
-              : "bg-background/60 border-border/80 hover:border-slate-500 text-muted-foreground/75 hover:text-foreground/90"
-          }`}
-        >
-          <div className="font-mono text-[8px] uppercase tracking-widest opacity-50">
-            AUX SYSTEM
+          {/* Project 03: TradePilot (Top Left - Muted Highlight) */}
+          <div
+            onClick={() => setActiveIdx(2)}
+            onMouseEnter={() => setHoveredIdx(2)}
+            onMouseLeave={() => setHoveredIdx(null)}
+            className={`relative md:absolute md:top-10 md:left-6 cursor-pointer z-20 rounded-xl px-4 py-2 border transition-all duration-300 backdrop-blur-md w-full max-w-[240px] md:w-[170px] text-center md:text-left select-none ${
+              activeIdx === 2
+                ? "bg-white/10 border-white text-white shadow-[0_0_15px_rgba(255,255,255,0.25)]"
+                : "bg-background/60 border-border/80 hover:border-slate-500 text-muted-foreground/75 hover:text-foreground/90"
+            }`}
+          >
+            <div className="font-mono text-[8px] uppercase tracking-widest opacity-50">
+              AUX SYSTEM
+            </div>
+            <div className="text-xs font-bold font-mono mt-0.5">03 / TradePilot</div>
           </div>
-          <div className="text-xs font-bold font-mono mt-0.5">03 / TradePilot</div>
         </div>
       </div>
 

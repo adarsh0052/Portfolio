@@ -76,7 +76,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   head: () => ({
     meta: [
       { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { name: "viewport", content: "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" },
       { title: "Adarsh Dadwal — Builder of Intelligent Products" },
       {
         name: "description",
@@ -107,12 +107,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className="overflow-x-hidden max-w-full">
       <head>
         <HeadContent />
       </head>
-      <body>
-        {children}
+      <body className="overflow-x-hidden max-w-full">
+        <div className="relative overflow-x-hidden w-full max-w-full min-h-screen">
+          {children}
+        </div>
         <Scripts />
       </body>
     </html>
