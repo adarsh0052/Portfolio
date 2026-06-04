@@ -27,10 +27,10 @@ export const Route = createFileRoute("/")({
 function Reveal({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 40 }}
+      initial={{ opacity: 0, y: 15 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.8, delay, ease: [0.22, 1, 0.36, 1] }}
+      viewport={{ once: true, margin: "-20px" }}
+      transition={{ duration: 0.45, delay, ease: "easeOut" }}
     >
       {children}
     </motion.div>
@@ -160,10 +160,10 @@ function SkillConstellation() {
       {SKILL_GROUPS.map((g, idx) => (
         <motion.div
           key={g.label}
-          initial={{ opacity: 0, scale: 0.95 }}
+          initial={{ opacity: 0, scale: 0.98 }}
           whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: idx * 0.08 }}
+          viewport={{ once: true, margin: "-20px" }}
+          transition={{ duration: 0.4, delay: idx * 0.05 }}
           className="relative overflow-hidden rounded-3xl border border-border bg-card/70 p-7 backdrop-blur-xl shadow-soft"
         >
           <ConstellationBg index={idx} />
@@ -249,10 +249,10 @@ function Journey() {
         {JOURNEY.map((j, i) => (
           <motion.li
             key={j.title}
-            initial={{ opacity: 0, x: i % 2 === 0 ? -30 : 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.7 }}
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-30px" }}
+            transition={{ duration: 0.45 }}
             className="relative pl-10 md:pl-0 md:grid md:grid-cols-2 md:gap-16"
           >
             {/* The absolute circle marker */}
@@ -472,7 +472,7 @@ function Index() {
   return (
     <>
       <Starfield count={100} className="fixed inset-0 z-0" />
-      <main className="relative z-10 bg-transparent text-foreground">
+      <main className="relative z-10 bg-transparent text-foreground overflow-x-hidden w-full">
         <CursorCore />
         <RocketScroller />
 
@@ -676,10 +676,10 @@ function Index() {
             {ELEMENTS.map((el, i) => (
               <motion.article
                 key={el.key}
-                initial={{ opacity: 0, y: 50 }}
+                initial={{ opacity: 0, y: 15 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-80px" }}
-                transition={{ duration: 0.8, delay: i * 0.1 }}
+                viewport={{ once: true, margin: "-20px" }}
+                transition={{ duration: 0.45, delay: i * 0.05 }}
                 whileHover={{ y: -8 }}
                 className="group relative overflow-hidden rounded-3xl border border-white/10 bg-slate-950/40 p-8 shadow-soft backdrop-blur-md transition-all duration-300 hover:border-white/25 hover:shadow-[0_4px_30px_rgba(0,0,0,0.7)]"
               >

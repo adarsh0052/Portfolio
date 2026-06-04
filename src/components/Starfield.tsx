@@ -196,8 +196,8 @@ export function Starfield({ count = 120, className = "" }: { count?: number; cla
           const rect = spacer.getBoundingClientRect();
           const absoluteSpacerY = rect.top + window.scrollY;
           centerY = absoluteSpacerY + rect.height / 2 - smoothScrollY;
-          // Align with spacer center exactly, and shift slightly left on mobile (e.g. 15px) as requested
-          centerX = rect.left + rect.width / 2 - (isMobile ? 15 : 0);
+          // Align with spacer center exactly
+          centerX = rect.left + rect.width / 2;
         }
 
         const R_bh = Math.min(width, height) * 0.065 + 12; // event horizon radius
