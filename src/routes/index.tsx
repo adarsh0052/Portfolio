@@ -536,7 +536,7 @@ function Index() {
             </motion.p>
 
             {/* Spacer for Centered Black Hole Visual (Pulled slightly up and smaller to fit Enter button) */}
-            <div id="blackhole-spacer" className="w-full h-[60px] sm:h-[80px] md:h-[95px] pointer-events-none" />
+            <div id="blackhole-spacer" className="w-full h-[60px] sm:h-[80px] md:h-[95px] pointer-events-none hidden md:block" />
 
             {/* Descriptive Person Summary Grid */}
             <motion.div

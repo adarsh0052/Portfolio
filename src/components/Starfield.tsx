@@ -185,22 +185,24 @@ export function Starfield({ count = 120, className = "" }: { count?: number; cla
         ctx.shadowBlur = 0;
       });
 
-      // RENDER LIVE BLACK HOLE
-      if (bhOpacity > 0) {
+      // RENDER LIVE BLACK HOLE (Desktop only to prevent mobile rendering lag and layout overflow)
+      if (bhOpacity > 0 && !isMobile) {
         const dpr = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 2);
         const w = canvas.width / dpr;
         const h = canvas.height / dpr;
 
         const spacer = document.getElementById("blackhole-spacer");
         let centerX = w / 2;
-        let centerY = (isMobile ? h * 0.35 : h * 0.42) - smoothScrollY;
+        let centerY = h * 0.42 - smoothScrollY;
 
         if (spacer) {
           const rect = spacer.getBoundingClientRect();
-          const absoluteSpacerY = rect.top + window.scrollY;
-          centerY = absoluteSpacerY + rect.height / 2 - smoothScrollY;
-          // Align with spacer center exactly
-          centerX = rect.left + rect.width / 2;
+          if (rect.width > 0) {
+            const absoluteSpacerY = rect.top + window.scrollY;
+            centerY = absoluteSpacerY + rect.height / 2 - smoothScrollY;
+            // Align with spacer center exactly
+            centerX = rect.left + rect.width / 2;
+          }
         }
 
         const R_bh = Math.min(width, height) * 0.065 + 12; // event horizon radius
