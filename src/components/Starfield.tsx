@@ -128,8 +128,7 @@ export function Starfield({ count = 120, className = "" }: { count?: number; cla
       wakeUpLoop();
     };
 
-    window.addEventListener("resize", handleResize);
-    handleResize();
+
 
     const spawnShootingStar = () => {
       if (Math.random() > 0.0006) return;
@@ -379,6 +378,9 @@ export function Starfield({ count = 120, className = "" }: { count?: number; cla
       scrollYRef.current = window.scrollY;
       wakeUpLoop();
     };
+
+    window.addEventListener("resize", handleResize);
+    handleResize();
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     
