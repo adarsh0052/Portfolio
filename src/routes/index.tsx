@@ -379,6 +379,12 @@ function OrbitingSatellite({ trailIdx }: { trailIdx: number }) {
     const startTime = Date.now();
     
     const update = () => {
+      // Pause animation when scrolled out of view to save CPU cycles
+      if (typeof window !== "undefined" && window.scrollY > 800) {
+        animationFrameId = requestAnimationFrame(update);
+        return;
+      }
+
       const duration = 7000; // 7s per orbit
       const elapsed = Date.now() - startTime;
       const delay = trailIdx * 140; // 0.14s delay in ms

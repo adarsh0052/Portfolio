@@ -12,6 +12,10 @@ interface Particle {
 }
 
 export function CursorCore() {
+  // Disable cursor trail completely on touch-only mobile devices to optimize scrolling performance
+  const isTouchDevice = typeof window !== "undefined" && (window.matchMedia("(pointer: coarse)").matches || "ontouchstart" in window);
+  if (isTouchDevice) return null;
+
   const dotRef = useRef<HTMLDivElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);

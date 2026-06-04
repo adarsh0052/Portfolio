@@ -59,10 +59,12 @@ export function Starfield({ count = 120, className = "" }: { count?: number; cla
     }
     const bhParticles: BlackHoleParticle[] = [];
 
+    const isMobile = window.innerWidth < 768;
+
     const initStars = (w: number, h: number) => {
       stars.length = 0;
-      // Uniformly distributed stars representing a realistic starry night sky
-      const starCount = Math.max(count * 2.5, 320);
+      // Uniformly distributed stars representing a realistic starry night sky (reduced on mobile)
+      const starCount = isMobile ? 80 : Math.max(count * 2.5, 320);
       for (let i = 0; i < starCount; i++) {
         stars.push({
           x: Math.random() * w,
@@ -78,7 +80,7 @@ export function Starfield({ count = 120, className = "" }: { count?: number; cla
     const initBlackHoleParticles = (w: number, h: number) => {
       bhParticles.length = 0;
       const R_bh = Math.min(w, h) * 0.065 + 12; // event horizon radius
-      const numParticles = 180;
+      const numParticles = isMobile ? 50 : 180;
 
       for (let i = 0; i < numParticles; i++) {
         // Radius of accretion disk orbits
@@ -169,7 +171,7 @@ export function Starfield({ count = 120, className = "" }: { count?: number; cla
         ctx.beginPath();
         ctx.fillStyle = `rgba(255, 255, 255, ${opacity * 0.95})`;
 
-        if (star.size > 1.1) {
+        if (star.size > 1.1 && !isMobile) {
           ctx.shadowBlur = 3;
           ctx.shadowColor = "rgba(255, 255, 255, 0.75)";
         }
@@ -185,16 +187,17 @@ export function Starfield({ count = 120, className = "" }: { count?: number; cla
         const dpr = window.devicePixelRatio || 1;
         const w = canvas.width / dpr;
         const h = canvas.height / dpr;
-        const isMobile = w < 768;
 
         const spacer = document.getElementById("blackhole-spacer");
-        const centerX = w / 2; // Mathematically lock to horizontal center of the viewport
+        let centerX = w / 2;
         let centerY = (isMobile ? h * 0.35 : h * 0.42) - smoothScrollY;
 
         if (spacer) {
           const rect = spacer.getBoundingClientRect();
           const absoluteSpacerY = rect.top + window.scrollY;
           centerY = absoluteSpacerY + rect.height / 2 - smoothScrollY;
+          // Align with spacer center exactly, and shift slightly left on mobile (e.g. 15px) as requested
+          centerX = rect.left + rect.width / 2 - (isMobile ? 15 : 0);
         }
 
         const R_bh = Math.min(width, height) * 0.065 + 12; // event horizon radius
