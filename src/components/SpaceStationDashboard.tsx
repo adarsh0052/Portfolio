@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, ChevronDown } from "lucide-react";
 
 // Custom brand SVGs for the technology stacks to render authentic colored logos
 function TechLogo({ name }: { name: string }) {
@@ -523,7 +523,7 @@ export function SpaceStationDashboard() {
       </div>
 
       {/* RIGHT: Editorial Dossier Card */}
-      <div className="relative border border-border bg-card/40 rounded-3xl p-8 shadow-soft flex flex-col justify-between overflow-hidden">
+      <div className="relative border border-border bg-card/40 rounded-3xl p-5 sm:p-8 shadow-soft flex flex-col justify-between overflow-hidden">
         {/* Soft grid background */}
         <div className="absolute inset-0 opacity-[0.015] bg-grid-cyber pointer-events-none" />
 
@@ -572,14 +572,19 @@ export function SpaceStationDashboard() {
                 <span className="font-mono text-xs md:text-sm uppercase tracking-widest text-muted-foreground font-bold">
                   Data Pipeline Architecture
                 </span>
-                <div className="mt-3 flex items-center gap-1.5 font-mono text-sm text-muted-foreground">
+                <div className="mt-3 flex flex-col md:flex-row md:items-center items-center gap-2 md:gap-1.5 font-mono text-sm text-muted-foreground w-full">
                   {activeModule.flow.map((step, i) => (
-                    <div key={step} className="flex items-center gap-1.5">
-                      <span className="bg-background/80 border border-border/60 px-2.5 py-1 rounded text-foreground text-xs">
+                    <div key={step} className="flex flex-col md:flex-row items-center gap-2 md:gap-1.5 w-full md:w-auto">
+                      <span className="bg-background/80 border border-border/60 px-3 py-1.5 md:px-2.5 md:py-1 rounded text-foreground text-xs text-center w-full md:w-auto block">
                         {step}
                       </span>
                       {i < activeModule.flow.length - 1 && (
-                        <ChevronRight className="w-3.5 h-3.5 opacity-60" />
+                        <>
+                          {/* Desktop Chevron */}
+                          <ChevronRight className="hidden md:block w-3.5 h-3.5 opacity-60" />
+                          {/* Mobile Chevron */}
+                          <ChevronDown className="block md:hidden w-4 h-4 opacity-60 text-muted-foreground/80 my-0.5" />
+                        </>
                       )}
                     </div>
                   ))}

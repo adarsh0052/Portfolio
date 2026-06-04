@@ -26,16 +26,6 @@ export function Starfield({ count = 120, className = "" }: { count?: number; cla
   const scrollYRef = useRef(0);
 
   useEffect(() => {
-    const handleScroll = () => {
-      scrollYRef.current = window.scrollY;
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -45,6 +35,7 @@ export function Starfield({ count = 120, className = "" }: { count?: number; cla
     let animationFrameId: number;
     let width = 0;
     let height = 0;
+    let isMobile = window.innerWidth < 768;
 
     const stars: Star[] = [];
     const shootingStars: ShootingStar[] = [];
@@ -59,12 +50,10 @@ export function Starfield({ count = 120, className = "" }: { count?: number; cla
     }
     const bhParticles: BlackHoleParticle[] = [];
 
-    const isMobile = window.innerWidth < 768;
-
     const initStars = (w: number, h: number) => {
       stars.length = 0;
       // Uniformly distributed stars representing a realistic starry night sky (reduced on mobile)
-      const starCount = isMobile ? 80 : Math.max(count * 2.5, 320);
+      const starCount = isMobile ? 40 : Math.max(count * 2.5, 320);
       for (let i = 0; i < starCount; i++) {
         stars.push({
           x: Math.random() * w,
@@ -80,11 +69,22 @@ export function Starfield({ count = 120, className = "" }: { count?: number; cla
     const initBlackHoleParticles = (w: number, h: number) => {
       bhParticles.length = 0;
       const R_bh = Math.min(w, h) * 0.065 + 12; // event horizon radius
-      const numParticles = isMobile ? 50 : 180;
+      const numParticles = isMobile ? 35 : 180;
+      const maxAllowedDist = w / 2 - 20; // 20px padding from screen edge
 
       for (let i = 0; i < numParticles; i++) {
-        // Radius of accretion disk orbits
-        const r = R_bh * 1.25 + Math.random() * (Math.min(w, h) * 0.22);
+        // Calculate a safe maximum orbit radius for this screen width to prevent horizontal overflow
+        const maxR = Math.max(
+          R_bh * 1.25,
+          Math.min(
+            R_bh * 1.25 + (Math.min(w, h) * (isMobile ? 0.08 : 0.22)),
+            maxAllowedDist * 0.8
+          )
+        );
+        const minR = R_bh * 1.25;
+
+        // Radius of accretion disk orbits (scaled down on mobile to prevent screen overflow)
+        const r = minR + Math.random() * (maxR - minR);
         const angle = Math.random() * Math.PI * 2;
         // Keplerian orbital speed (slower further out)
         const speed = (0.003 + Math.random() * 0.003) * Math.sqrt((R_bh * 1.4) / r);
@@ -111,8 +111,10 @@ export function Starfield({ count = 120, className = "" }: { count?: number; cla
       // Use client dimensions to exclude scrollbar widths and prevent overflow
       width = document.documentElement.clientWidth;
       height = document.documentElement.clientHeight;
+      isMobile = width < 768; // Update closure variable
 
-      const dpr = window.devicePixelRatio || 1;
+      // Throttle DPR on mobile to reduce WebKit context blending and scroll-stutter
+      const dpr = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = width * dpr;
       canvas.height = height * dpr;
       canvas.style.width = `${width}px`;
@@ -121,6 +123,9 @@ export function Starfield({ count = 120, className = "" }: { count?: number; cla
       ctx.scale(dpr, dpr);
       initStars(width, height);
       initBlackHoleParticles(width, height);
+
+      // Force-render a frame on resize to prevent flashes
+      wakeUpLoop();
     };
 
     window.addEventListener("resize", handleResize);
@@ -150,10 +155,10 @@ export function Starfield({ count = 120, className = "" }: { count?: number; cla
     };
 
     let smoothScrollY = scrollYRef.current;
+    let frameCount = 0;
+    let isRunning = true;
 
-    const animate = () => {
-      smoothScrollY += (scrollYRef.current - smoothScrollY) * 0.1;
-
+    const drawFrame = (bhOpacity: number) => {
       // Deep celestial dark backdrop
       ctx.fillStyle = "#020204";
       ctx.fillRect(0, 0, width, height);
@@ -181,17 +186,9 @@ export function Starfield({ count = 120, className = "" }: { count?: number; cla
         ctx.shadowBlur = 0;
       });
 
-      // RENDER LIVE BLACK HOLE (Fades out dynamically as we scroll down)
-      const bhOpacity = Math.max(0, 1 - smoothScrollY / (height * 0.85));
-
-      // On mobile, if the black hole is fully faded out, stop redrawing to achieve 60fps on scroll
-      if (isMobile && bhOpacity === 0) {
-        animationFrameId = requestAnimationFrame(animate);
-        return;
-      }
-
+      // RENDER LIVE BLACK HOLE
       if (bhOpacity > 0) {
-        const dpr = window.devicePixelRatio || 1;
+        const dpr = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 2);
         const w = canvas.width / dpr;
         const h = canvas.height / dpr;
 
@@ -336,14 +333,57 @@ export function Starfield({ count = 120, className = "" }: { count?: number; cla
           }
         }
       }
+    };
 
+    const animate = () => {
+      smoothScrollY += (scrollYRef.current - smoothScrollY) * 0.1;
+
+      // Skip alternate frames on mobile to double rendering performance (runs at a stable 30fps)
+      frameCount++;
+      if (isMobile && frameCount % 2 !== 0) {
+        animationFrameId = requestAnimationFrame(animate);
+        return;
+      }
+
+      const scrollDelta = Math.abs(scrollYRef.current - smoothScrollY);
+      const bhOpacity = Math.max(0, 1 - smoothScrollY / (height * 0.85));
+
+      // Pause drawing loop entirely when:
+      // 1. Black hole is completely faded out (bhOpacity === 0)
+      // 2. The scroll has settled (scrollDelta < 0.15)
+      // This saves 100% of background CPU/GPU draw time during reading/scrolling lower parts of the page.
+      if (bhOpacity === 0 && scrollDelta < 0.15) {
+        drawFrame(0); // Draw final aligned frame
+        isRunning = false;
+        return;
+      }
+
+      drawFrame(bhOpacity);
       animationFrameId = requestAnimationFrame(animate);
     };
 
+    const wakeUpLoop = () => {
+      if (!isRunning) {
+        isRunning = true;
+        frameCount = 0; // Reset skip frame throttle
+        animate();
+      }
+    };
+
+    // Scroll listener inside the main useEffect to directly wake up the animation loop
+    const handleScroll = () => {
+      scrollYRef.current = window.scrollY;
+      wakeUpLoop();
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    
+    // Initial loop execution
     animate();
 
     return () => {
       window.removeEventListener("resize", handleResize);
+      window.removeEventListener("scroll", handleScroll);
       cancelAnimationFrame(animationFrameId);
     };
   }, [count]);

@@ -1,4 +1,4 @@
-import { motion, useMotionValue, useTransform, useScroll, useSpring } from "framer-motion";
+import { motion, useMotionValue, useTransform, useScroll, useSpring, useInView } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import profileImage from "@/assets/profile.jpg";
@@ -164,7 +164,7 @@ function SkillConstellation() {
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true, margin: "-20px" }}
           transition={{ duration: 0.4, delay: idx * 0.05 }}
-          className="relative overflow-hidden rounded-3xl border border-border bg-card/70 p-7 backdrop-blur-xl shadow-soft"
+          className="relative overflow-hidden rounded-3xl border border-border bg-card/70 p-7 backdrop-blur-none md:backdrop-blur-xl shadow-soft"
         >
           <ConstellationBg index={idx} />
           <div className="relative z-10 flex items-baseline justify-between">
@@ -307,7 +307,7 @@ function ContactTerminal() {
   const [msg, setMsg] = useState("");
   const [sent, setSent] = useState(false);
   return (
-    <div className="relative mx-auto max-w-2xl rounded-3xl border border-border bg-card/80 p-8 shadow-soft backdrop-blur-xl">
+    <div className="relative mx-auto max-w-2xl rounded-3xl border border-border bg-card/80 p-8 shadow-soft backdrop-blur-none md:backdrop-blur-xl">
       <div className="flex items-center gap-2 border-b border-border pb-3">
         <span className="h-2.5 w-2.5 rounded-full bg-[var(--ember)]" />
         <span className="h-2.5 w-2.5 rounded-full bg-[var(--solar)]" />
@@ -366,10 +366,12 @@ function ContactTerminal() {
   );
 }
 
-function OrbitingSatellite({ trailIdx }: { trailIdx: number }) {
+function OrbitingSatellite({ trailIdx, isInView }: { trailIdx: number; isInView: boolean }) {
   const satelliteRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
+    if (!isInView) return;
+
     const orbitCos = Math.cos((-20 * Math.PI) / 180);
     const orbitSin = Math.sin((-20 * Math.PI) / 180);
     const rx = 185;
@@ -379,12 +381,6 @@ function OrbitingSatellite({ trailIdx }: { trailIdx: number }) {
     const startTime = Date.now();
     
     const update = () => {
-      // Pause animation when scrolled out of view to save CPU cycles
-      if (typeof window !== "undefined" && window.scrollY > 800) {
-        animationFrameId = requestAnimationFrame(update);
-        return;
-      }
-
       const duration = 7000; // 7s per orbit
       const elapsed = Date.now() - startTime;
       const delay = trailIdx * 140; // 0.14s delay in ms
@@ -416,7 +412,7 @@ function OrbitingSatellite({ trailIdx }: { trailIdx: number }) {
     update();
     
     return () => cancelAnimationFrame(animationFrameId);
-  }, [trailIdx]);
+  }, [trailIdx, isInView]);
 
   return (
     <div
@@ -448,18 +444,45 @@ function Index() {
   const { scrollYProgress } = useScroll();
   const bgY = useTransform(scrollYProgress, [0, 1], [0, -200]);
   const [entered, setEntered] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const githubScrollRef = useRef<HTMLDivElement>(null);
+  const portraitRef = useRef<HTMLDivElement>(null);
+  const isPortraitInView = useInView(portraitRef, { margin: "100px" });
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setIsMobile(window.innerWidth < 768);
+    }
+  }, []);
 
   const handleGithubImageLoad = () => {
     if (githubScrollRef.current) {
-      githubScrollRef.current.scrollLeft = githubScrollRef.current.scrollWidth;
+      githubScrollRef.current.scrollLeft = githubScrollRef.current.scrollWidth - githubScrollRef.current.clientWidth;
     }
   };
 
   useEffect(() => {
-    if (githubScrollRef.current) {
-      githubScrollRef.current.scrollLeft = githubScrollRef.current.scrollWidth;
+    const container = githubScrollRef.current;
+    if (!container) return;
+
+    // Use ResizeObserver to auto-focus the current month (far right) whenever layout or image loading changes its size
+    const observer = new ResizeObserver(() => {
+      container.scrollLeft = container.scrollWidth - container.clientWidth;
+    });
+
+    observer.observe(container);
+    
+    const img = container.querySelector("img");
+    if (img) {
+      observer.observe(img);
     }
+
+    // Run immediately
+    container.scrollLeft = container.scrollWidth - container.clientWidth;
+
+    return () => {
+      observer.disconnect();
+    };
   }, []);
 
   const enter = () => {
@@ -518,7 +541,7 @@ function Index() {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.8 }}
-              className="mt-18 grid grid-cols-1 gap-6 sm:grid-cols-3 w-full max-w-4xl border border-white/10 bg-slate-950/40 rounded-2xl p-6 backdrop-blur-lg text-left font-sans shadow-[0_4px_30px_rgba(0,0,0,0.85)]"
+              className="mt-18 grid grid-cols-1 gap-6 sm:grid-cols-3 w-full max-w-4xl border border-white/10 bg-slate-950/40 rounded-2xl p-6 backdrop-blur-none md:backdrop-blur-lg text-left font-sans shadow-[0_4px_30px_rgba(0,0,0,0.85)]"
             >
               <div className="border-b border-border/40 pb-4 sm:border-b-0 sm:pb-0 sm:border-r sm:pr-6">
                 <span className="text-xs sm:text-sm uppercase tracking-wider text-muted-foreground font-semibold">
@@ -583,7 +606,7 @@ function Index() {
         <section id="vision" className="relative px-6 py-14">
           <div className="mx-auto grid max-w-6xl items-center gap-16 md:grid-cols-[1fr_1.2fr]">
             <Reveal>
-              <div className="relative mx-auto h-[380px] w-[300px]">
+              <div ref={portraitRef} className="relative mx-auto h-[380px] w-[300px]">
                 <motion.div
                   animate={{ rotate: 360 }}
                   transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
@@ -619,8 +642,8 @@ function Index() {
                 </svg>
 
                 {/* Orbiting Satellite with 3D Depth Sorting and Trail */}
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <OrbitingSatellite key={i} trailIdx={i} />
+                {Array.from({ length: isMobile ? 2 : 5 }).map((_, i) => (
+                  <OrbitingSatellite key={i} trailIdx={i} isInView={isPortraitInView} />
                 ))}
 
                 <motion.div
@@ -681,7 +704,7 @@ function Index() {
                 viewport={{ once: true, margin: "-20px" }}
                 transition={{ duration: 0.45, delay: i * 0.05 }}
                 whileHover={{ y: -8 }}
-                className="group relative overflow-hidden rounded-3xl border border-white/10 bg-slate-950/40 p-8 shadow-soft backdrop-blur-md transition-all duration-300 hover:border-white/25 hover:shadow-[0_4px_30px_rgba(0,0,0,0.7)]"
+                className="group relative overflow-hidden rounded-3xl border border-white/10 bg-slate-950/40 p-8 shadow-soft backdrop-blur-none md:backdrop-blur-md transition-all duration-300 hover:border-white/25 hover:shadow-[0_4px_30px_rgba(0,0,0,0.7)]"
               >
                 <motion.div
                   aria-hidden
@@ -769,7 +792,7 @@ function Index() {
           </Reveal>
           <Reveal delay={0.1}>
             <div className="mx-auto mt-8 max-w-5xl">
-              <div className="relative overflow-hidden rounded-3xl border border-border bg-card/80 p-6 shadow-soft backdrop-blur-xl sm:p-10">
+              <div className="relative overflow-hidden rounded-3xl border border-border bg-card/80 p-6 shadow-soft backdrop-blur-none md:backdrop-blur-xl sm:p-10">
                 <div
                   aria-hidden
                   className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full opacity-30 blur-3xl"
