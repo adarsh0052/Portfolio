@@ -844,7 +844,7 @@ function Index() {
                 ✦ open a channel
               </div>
               <h2 className="mt-3 font-display text-5xl md:text-6xl">Let's build something</h2>
-              <p className="mt-5 text-muted-foreground text-justify">
+              <p className="mt-5 ml-36 text-muted-foreground text-justify">
                 Working on something interesting? Looking for a collaborator? Send a transmission.
               </p>
             </div>
