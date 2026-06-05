@@ -793,9 +793,9 @@ function Index() {
           <Reveal>
             <div className="mx-auto max-w-4xl text-center">
               <h2 className="mt-3 font-display text-5xl md:text-6xl">Signals from the workshop</h2>
-              <p className="mt-5 text-muted-foreground text-justify">
+              {/* <p className="mt-5 text-muted-foreground text-justify">
                 A live look at where my commits are landing this orbit.
-              </p>
+              </p> */}
             </div>
           </Reveal>
           <Reveal delay={0.1}>
@@ -844,9 +844,9 @@ function Index() {
                 ✦ open a channel
               </div>
               <h2 className="mt-3 font-display text-5xl md:text-6xl">Let's build something</h2>
-              <p className="mt-5 ml-36 text-muted-foreground text-justify">
+              {/* <p className="mt-5 ml-36 text-muted-foreground text-justify">
                 Working on something interesting? Looking for a collaborator? Send a transmission.
-              </p>
+              </p> */}
             </div>
           </Reveal>
           <div className="mt-8">
