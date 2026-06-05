@@ -69,7 +69,7 @@ export function Starfield({ count = 120, className = "" }: { count?: number; cla
     const initBlackHoleParticles = (w: number, h: number) => {
       bhParticles.length = 0;
       const R_bh = Math.min(w, h) * 0.065 + 12; // event horizon radius
-      const numParticles = isMobile ? 35 : 180;
+      const numParticles = isMobile ? 120 : 180;
       const maxAllowedDist = w / 2 - 20; // 20px padding from screen edge
 
       for (let i = 0; i < numParticles; i++) {
@@ -85,7 +85,9 @@ export function Starfield({ count = 120, className = "" }: { count?: number; cla
 
         // Radius of accretion disk orbits (scaled down on mobile to prevent screen overflow)
         const r = minR + Math.random() * (maxR - minR);
-        const angle = Math.random() * Math.PI * 2;
+        const angle = isMobile
+  ? (i / numParticles) * Math.PI * 2   // evenly spaced for static ring
+  : Math.random() * Math.PI * 2; 
         // Keplerian orbital speed (slower further out)
         const speed = (0.003 + Math.random() * 0.003) * Math.sqrt((R_bh * 1.4) / r);
         const size = Math.random() * 1.7 + 0.55;
@@ -186,7 +188,7 @@ export function Starfield({ count = 120, className = "" }: { count?: number; cla
       });
 
       // RENDER LIVE BLACK HOLE (Desktop only to prevent mobile rendering lag and layout overflow)
-      if (bhOpacity > 0 && !isMobile) {
+      if (bhOpacity > 0) {
         const dpr = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 2);
         const w = canvas.width / dpr;
         const h = canvas.height / dpr;
@@ -233,6 +235,20 @@ export function Starfield({ count = 120, className = "" }: { count?: number; cla
         }
 
         // 2. Draw BACK HALF of lensed accretion disk (where particles orbit behind singularity: sin(angle) <= 0)
+        if (isMobile) {
+          // Clean static rings — no particles
+          [
+            { r: R_bh * 3.0, color: "rgba(249, 115, 22,",   lineW: 14, alpha: 0.13 },
+            { r: R_bh * 2.3, color: "rgba(253, 186, 116,",  lineW: 9,  alpha: 0.22 },
+            { r: R_bh * 1.75, color: "rgba(254, 215, 170,", lineW: 5,  alpha: 0.30 },
+          ].forEach(({ r, color, lineW, alpha }) => {
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, r, 0, Math.PI * 2);
+            ctx.strokeStyle = `${color}${alpha * bhOpacity})`;
+            ctx.lineWidth = lineW;
+            ctx.stroke();
+          });
+        } else {
         bhParticles.forEach((p) => {
           const sinA = Math.sin(p.angle);
           if (sinA <= 0) {
@@ -254,7 +270,7 @@ export function Starfield({ count = 120, className = "" }: { count?: number; cla
             ctx.arc(px, py, size, 0, Math.PI * 2);
             ctx.fill();
           }
-        });
+        })};
 
         // 3. Draw Event Horizon (The dark void sphere)
         ctx.fillStyle = "#000000";
@@ -282,6 +298,7 @@ export function Starfield({ count = 120, className = "" }: { count?: number; cla
         ctx.fill();
 
         // 5. Draw FRONT HALF of accretion disk (passing in front of singularity: sin(angle) > 0)
+        if (!isMobile) {
         bhParticles.forEach((p) => {
           const sinA = Math.sin(p.angle);
           if (sinA > 0) {
@@ -301,7 +318,7 @@ export function Starfield({ count = 120, className = "" }: { count?: number; cla
             ctx.arc(px, py, size, 0, Math.PI * 2);
             ctx.fill();
           }
-        });
+        })};
       }
 
       // Draw shooting stars (only when scrolled down or when black hole is muted to keep focus clean)

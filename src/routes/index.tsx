@@ -497,9 +497,13 @@ function Index() {
   return (
     <>
       <Starfield count={100} className="fixed inset-0 z-0" />
-      <main className="relative z-10 bg-transparent text-foreground overflow-x-hidden w-full">
-        <CursorCore />
+      {/* <main className="relative z-10 bg-transparent text-foreground overflow-x-hidden w-full"> */}
+      <main className="relative z-10 bg-transparent text-foreground overflow-x-hidden overflow-y-visible w-full max-w-[100vw]">
+        {/* <CursorCore />
         <RocketScroller />
+         */}
+   <CursorCore />
+  <RocketScroller /> 
 
         {/* progress comet */}
         <motion.div
@@ -512,8 +516,10 @@ function Index() {
         />
 
         {/* HERO */}
-        <section className="relative min-h-screen flex items-center justify-center">
-          <div className="relative mx-auto flex w-full max-w-7xl flex-col items-center justify-center px-6 text-center pt-8 pb-4">
+        {/* <section className="relative min-h-screen flex items-center justify-center"> */}
+        <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+          {/* <div className="relative mx-auto flex w-full max-w-7xl flex-col items-center justify-center px-6 text-center pt-8 pb-4"> */}
+          <div className="relative mx-auto flex w-full max-w-7xl flex-col items-center justify-center px-4 sm:px-6 text-center pt-8 pb-4 overflow-x-hidden">
             {/* Central Logo dot removed by user request */}
 
             <motion.h1
@@ -543,7 +549,7 @@ function Index() {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.8 }}
-              className="mt-18 grid grid-cols-1 gap-6 sm:grid-cols-3 w-full max-w-4xl border border-white/10 bg-slate-950/40 rounded-2xl p-6 backdrop-blur-none md:backdrop-blur-lg text-left font-sans shadow-[0_4px_30px_rgba(0,0,0,0.85)]"
+              className="mt-18 grid grid-cols-1 gap-6 sm:grid-cols-3 w-full max-w-4xl border border-white/10 bg-slate-950/40 rounded-2xl p-4 sm:p-6 backdrop-blur-none md:backdrop-blur-lg text-left font-sans shadow-[0_4px_30px_rgba(0,0,0,0.85)] overflow-x-hidden"
             >
               <div className="border-b border-border/40 pb-4 sm:border-b-0 sm:pb-0 sm:border-r sm:pr-6">
                 <span className="text-xs sm:text-sm uppercase tracking-wider text-muted-foreground font-semibold">
@@ -605,14 +611,14 @@ function Index() {
         </section>
 
         {/* INTRO / VISION */}
-        <section id="vision" className="relative px-6 py-14">
+        <section id="vision" className="relative px-4 sm:px-6 py-14 overflow-x-hidden">
           <div className="mx-auto grid max-w-6xl items-center gap-16 md:grid-cols-[1fr_1.2fr]">
             <Reveal>
               <div ref={portraitRef} className="relative mx-auto h-[380px] w-[300px]">
                 <motion.div
                   animate={{ rotate: 360 }}
                   transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
-                  className="absolute -inset-6 rounded-[2rem] border border-dashed"
+                  className="absolute -inset-6 rounded-[2rem] border border-dashed hidden sm:block"
                   style={{ borderColor: "color-mix(in oklab, var(--cosmos) 25%, transparent)" }}
                 />
                 <div
@@ -685,7 +691,7 @@ function Index() {
         </section>
 
         {/* ELEMENTS — story */}
-        <section className="relative px-6 py-14">
+        <section className="relative px-4 sm:px-6 py-14 overflow-x-hidden">
           <Reveal>
             <div className="mx-auto max-w-4xl text-center">
               <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
@@ -753,7 +759,7 @@ function Index() {
         </section>
 
         {/* EXPERIENCE / JOURNEY */}
-        <section className="relative px-6 py-14">
+        <section className="relative px-4 sm:px-6 py-14 overflow-x-hidden">
           <Reveal>
             <div className="mx-auto max-w-4xl text-center">
               <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
@@ -768,7 +774,7 @@ function Index() {
         </section>
 
         {/* SKILLS */}
-        <section className="relative px-6 py-14">
+        <section className="relative px-4 sm:px-6 py-14 overflow-x-hidden">
           <Reveal>
             <div className="mx-auto max-w-4xl text-center">
               <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
